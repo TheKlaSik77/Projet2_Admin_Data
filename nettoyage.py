@@ -27,27 +27,24 @@ def extract_sector(text):
         return None  # Si la conversion échoue, mettre None
 
 
-jobs = jobs.loc[:,["Experience", "Qualifications","Salary Range","location","Country","Work Type","Company Size","Job Posting Date","Preference","Role","Benefits","Company","Company Profile"]]
+jobs = jobs.loc[:,["Experience", "Qualifications","Salary Range","location","Country","Work Type","Company Size","Preference","Role","Benefits","Company","Company Profile"]]
 
 # Fixme : Traitement de jobs Sector
 
-# jobs["Sector"] = jobs["Company Profile"].apply(extract_sector)
+jobs["Sector"] = jobs["Company Profile"].apply(extract_sector)
 
-# print(jobs["Sector"].iloc[0])
-
-# print(jobs.head())
 #-----------------------------------------------------------------------------------------------
 
 # Fixme : Traitement Salary Range (Récupérer la moyenne)
-# jobs['Avg Salary'] = jobs['Salary Range'].str.replace(r'[K$]', '000', regex=True).str.extract(r'(\d+)-(\d+)').astype(float).mean(axis=1)
-# print(jobs[["Salary Range","Salary"]].head())
+jobs['Avg Salary'] = jobs['Salary Range'].str.replace(r'[K$]', '000', regex=True).str.extract(r'(\d+)-(\d+)').astype(float).mean(axis=1)
 
-print(jobs.columns)
-print(jobs["Experience"].head())
 
 #-------------------------------------------------------------------------------------------------
 
 # Fixme : Traitement de Range Experience
-# jobs[["Experience min", "Experience_max"]] = jobs["Experience"].str.extract(r'(\d+) to (\d+) Years')
-# print(jobs[["Experience min", "Experience_max","Experience"]].head())
-# jobs = jobs.drop(columns=["Company Profile","Salary Range,"Experience"])
+jobs[["Experience min", "Experience_max"]] = jobs["Experience"].str.extract(r'(\d+) to (\d+) Years')
+
+jobs = jobs.drop(columns=["Company Profile","Salary Range","Experience"])
+
+jobs.to_csv("./data/donnees_nettoyees.csv", index=False)
+
