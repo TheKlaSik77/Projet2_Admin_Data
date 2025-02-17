@@ -6,6 +6,8 @@ import re
 
 data_path = "./data/job_descriptions.pkl"
 
+#test gaspard
+
 # Charger depuis Pickle si le fichier existe, sinon lire le CSV et le sauvegarder
 if os.path.exists(data_path):
     jobs = pd.read_pickle(data_path)
