@@ -31,6 +31,8 @@ jobs = jobs.loc[:,["Experience", "Qualifications","Salary Range","location","Cou
 
 # print(jobs["Sector"].iloc[0])
 
+jobs = jobs.drop(columns=["Company Profile"])
+#-----------------------------------------------------------------------------------------------
 
 # d = ast.literal_eval(jobs["Company Profile"].iloc[0])
 # print(d)
