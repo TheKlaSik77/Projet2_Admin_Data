@@ -18,33 +18,33 @@ else:
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)
 
+# Extrait les Sector
 def extract_sector(text):
     try:
-        # Convertir la chaîne en dictionnaire Python
         data = ast.literal_eval(text)
-        return data.get("Sector", None)  # Retourne "Sector" ou None si absent
+        return data.get("Sector", None)
     except (ValueError, SyntaxError):
-        return None  # Si la conversion échoue, mettre None
+        return None
 
-
-jobs = jobs.loc[:,["Experience", "Qualifications","Salary Range","location","Country","Work Type","Company Size","Preference","Role","Benefits","Company","Company Profile"]]
-
+jobs = jobs.drop(['latitude', 'longitude','Job Posting Date', 'Contact Person', 'Contact', 'Job Title','Job Portal', 'Job Description','skills', 'Responsibilities'],axis=1)
 # Fixme : Traitement de jobs Sector
 
 jobs["Sector"] = jobs["Company Profile"].apply(extract_sector)
 
 #-----------------------------------------------------------------------------------------------
 
-# Fixme : Traitement Salary Range (Récupérer la moyenne)
+# Traitement Salary Range (Récupérer la moyenne)
 jobs['Avg Salary'] = jobs['Salary Range'].str.replace(r'[K$]', '000', regex=True).str.extract(r'(\d+)-(\d+)').astype(float).mean(axis=1)
 
 
 #-------------------------------------------------------------------------------------------------
 
-# Fixme : Traitement de Range Experience
-jobs[["Experience min", "Experience_max"]] = jobs["Experience"].str.extract(r'(\d+) to (\d+) Years')
+# Traitement de Range Experience
+jobs[["Experience_min", "Experience_max"]] = jobs["Experience"].str.extract(r'(\d+) to (\d+) Years')
 
 jobs = jobs.drop(columns=["Company Profile","Salary Range","Experience"])
+
+jobs.fillna("Inconnu", inplace=True)
 
 jobs.to_csv("./data/donnees_nettoyees.csv", index=False)
 
